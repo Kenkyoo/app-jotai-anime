@@ -4,27 +4,26 @@ import Parser from "html-react-parser";
 import { atom, useAtom, useSetAtom } from "jotai";
 
 type PostData = {
-  by: string;
-  descendants?: number;
-  id: number;
-  kids?: number[];
-  parent: number;
-  score?: number;
-  text?: string;
-  time: number;
-  title?: string;
-  type: "comment" | "story";
   url?: string;
+  favorites: number;
+  image_id: number;
+  uploaded_at: string;
+  source: string;
+  dominant_color: string;
+  byte_size: number;
+  signature: string;
+  artist: {
+    name: string;
+  };
 };
 
-const postId = atom(9001);
+const postId = atom(100);
 const postData = atom(async (get) => {
   const id = get(postId);
-  const response = await fetch(
-    `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
-  );
-  const data: PostData = await response.json();
-  return data;
+  const response = await fetch(`https://api.waifu.im/search?id=${id}`);
+  const data = await response.json();
+  const image = data.images[0];
+  return image;
 });
 
 function Id() {
@@ -38,22 +37,66 @@ function Next() {
   // const [, setPostId] = useAtom(postId)
   const setPostId = useSetAtom(postId);
   return (
-    <button onClick={() => setPostId((id) => id + 1)}>
-      <div>→</div>
+    <button
+      onClick={() => setPostId((id) => id + 1)}
+      className="btn btn-primary"
+    >
+      Next
     </button>
   );
 }
 
 function PostTitle() {
-  const [{ by, text, time, title, url }] = useAtom(postData);
+  const [
+    {
+      image_id,
+      url,
+      uploaded_at,
+      favorites,
+      source,
+      artist,
+      dominant_color,
+      byte_size,
+      signature,
+    },
+  ] = useAtom(postData);
   return (
-    <>
-      <h2>{by}</h2>
-      <h6>{new Date(time * 1000).toLocaleDateString("en-US")}</h6>
-      {title && <h4>{title}</h4>}
-      {url && <a href={url}>{url}</a>}
-      {text && <div>{Parser(text)}</div>}
-    </>
+    <div
+      className="hero min-h-screen"
+      style={{
+        backgroundImage: `url(${url})`,
+      }}
+    >
+      <div className="hero-overlay"></div>
+      <div className="hero-content text-neutral-content text-center">
+        <div className="max-w-md">
+          <h1 className="mb-5 text-5xl font-bold">{artist.name}</h1>
+          {source && <p className="mb-5">{Parser(source)}</p>}
+          <h6>{new Date(uploaded_at * 1000).toLocaleDateString("en-US")}</h6>
+          <div
+            className="card w-96 shadow-sm"
+            style={{
+              backgroundColor: dominant_color,
+            }}
+          >
+            <figure>
+              <img src={url} alt="Shoes" />
+            </figure>
+            <div className="card-body">
+              <h2 className="card-title">
+                {}
+                <div className="badge badge-secondary">{image_id}</div>
+              </h2>
+              <p>{signature}</p>
+              <div className="card-actions justify-end">
+                <div className="badge badge-outline">{favorites}</div>
+                <div className="badge badge-outline">{byte_size}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
