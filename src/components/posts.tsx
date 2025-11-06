@@ -3,20 +3,6 @@ import { a, useSpring } from "@react-spring/web";
 import Parser from "html-react-parser";
 import { atom, useAtom, useSetAtom } from "jotai";
 
-type PostData = {
-  url?: string;
-  favorites: number;
-  image_id: number;
-  uploaded_at: string;
-  source: string;
-  dominant_color: string;
-  byte_size: number;
-  signature: string;
-  artist: {
-    name: string;
-  };
-};
-
 const postId = atom(1);
 const postData = atom(async (get) => {
   const id = get(postId);
@@ -61,7 +47,6 @@ function PostTitle() {
       artist,
       dominant_color,
       byte_size,
-      signature,
     },
   ] = useAtom(postData);
   return (
@@ -113,7 +98,6 @@ export default function Posts() {
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
       </div>
       <ul
-        tabIndex="-1"
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
         <li><span> Page: <Id /></span></li>
       </ul>
