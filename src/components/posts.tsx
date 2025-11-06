@@ -29,7 +29,10 @@ const postData = atom(async (get) => {
 function Id() {
   const [id] = useAtom(postId);
   const props = useSpring({ from: { id }, id, reset: true });
-  return <a.h1>{props.id.to(Math.round)}</a.h1>;
+  return (
+     <a.h1 className="btn btn-ghost text-xl">{props.id.to(Math.round)}</a.h1>
+    )
+  
 }
 
 function Next() {
@@ -70,8 +73,8 @@ function PostTitle() {
       <div className="hero-overlay"></div>
       <div className="hero-content text-neutral-content text-center">
         <div className="max-w-md">
-          <h1 className="mb-5 text-5xl font-bold">{artist.name}</h1>
-          {source && <p className="mb-5">{Parser(source)}</p>}
+          <h1 className="mb-5 text-5xl font-bold">Art</h1>
+          {source && <p className="mb-5">Source: {Parser(source)}</p>}
           <h6>{new Date(uploaded_at * 1000).toLocaleDateString("en-US")}</h6>
           <div
             className="card w-96 shadow-sm"
@@ -84,13 +87,12 @@ function PostTitle() {
             </figure>
             <div className="card-body">
               <h2 className="card-title">
-                {}
-                <div className="badge badge-secondary">{image_id}</div>
+                <div className="badge badge-secondary">Id: {image_id}</div>
               </h2>
-              <p>{signature}</p>
+              <p className="text-primary">{signature}</p>
               <div className="card-actions justify-end">
-                <div className="badge badge-outline">{favorites}</div>
-                <div className="badge badge-outline">{byte_size}</div>
+                <div className="badge badge-accent">Favs: {favorites}</div>
+                <div className="badge badge-secondary">Size: {byte_size}</div>
               </div>
             </div>
           </div>
@@ -103,13 +105,39 @@ function PostTitle() {
 export default function Posts() {
   return (
     <>
-      <Id />
+    <div className="navbar bg-base-100 shadow-sm">
+  <div className="navbar-start">
+    <div className="dropdown">
+      <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+      </div>
+      <ul
+        tabIndex="-1"
+        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li><Id /></li>
+      </ul>
+    </div>
+    <a className="btn btn-ghost text-xl">Waifu app</a>
+  </div>
+  <div className="navbar-center hidden lg:flex">
+    <ul className="menu menu-horizontal px-1">
+      <li><Id /></li>
+    </ul>
+  </div>
+  <div className="navbar-end me-5">
+    <Next />
+  </div>
+</div>
       <div>
         <Suspense fallback={<h2>Loading...</h2>}>
           <PostTitle />
         </Suspense>
       </div>
-      <Next />
+      <footer className="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
+        <aside>
+          <p>Copyright © {new Date().getFullYear()} - All right reserved by ACME Industries Ltd</p>
+        </aside>
+      </footer>
     </>
   );
 }
