@@ -17,12 +17,13 @@ type PostData = {
   };
 };
 
-const postId = atom(100);
+const postId = atom(1);
 const postData = atom(async (get) => {
   const id = get(postId);
   const response = await fetch(`https://api.waifu.im/search?id=${id}`);
   const data = await response.json();
   const image = data.images[0];
+  console.log(image)
   return image;
 });
 
@@ -42,7 +43,7 @@ function Next() {
   return (
     <button
       onClick={() => setPostId((id) => id + 1)}
-      className="btn btn-primary"
+      className="btn btn-accent"
     >
       Next
     </button>
@@ -73,9 +74,8 @@ function PostTitle() {
       <div className="hero-overlay"></div>
       <div className="hero-content text-neutral-content text-center">
         <div className="max-w-md">
-          <h1 className="mb-5 text-5xl font-bold">Art</h1>
-          {source && <p className="mb-5">Source: {Parser(source)}</p>}
-          <h6>{new Date(uploaded_at * 1000).toLocaleDateString("en-US")}</h6>
+         <h1 className="mb-5 text-5xl font-bold">{artist ? artist.name : "art"}</h1>
+          <h6>{new Date(uploaded_at).toLocaleDateString("es-AR")}</h6>
           <div
             className="card w-96 shadow-sm"
             style={{
@@ -87,12 +87,13 @@ function PostTitle() {
             </figure>
             <div className="card-body">
               <h2 className="card-title">
-                <div className="badge badge-secondary">Id: {image_id}</div>
+                ImageID
+                <div className="badge badge-secondary">{image_id}</div>
               </h2>
-              <p className="text-primary">{signature}</p>
+              <a className="text-primary">Source: {Parser(source)}</a>
               <div className="card-actions justify-end">
                 <div className="badge badge-accent">Favs: {favorites}</div>
-                <div className="badge badge-secondary">Size: {byte_size}</div>
+                <div className="badge badge-secondary">Size: {byte_size}kb</div>
               </div>
             </div>
           </div>
@@ -114,14 +115,14 @@ export default function Posts() {
       <ul
         tabIndex="-1"
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li><Id /></li>
+        <li><span> Page: <Id /></span></li>
       </ul>
     </div>
     <a className="btn btn-ghost text-xl">Waifu app</a>
   </div>
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal px-1">
-      <li><Id /></li>
+      <li><span> Page: <Id /></span></li>
     </ul>
   </div>
   <div className="navbar-end me-5">
@@ -135,7 +136,7 @@ export default function Posts() {
       </div>
       <footer className="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
         <aside>
-          <p>Copyright © {new Date().getFullYear()} - All right reserved by ACME Industries Ltd</p>
+          <p>Dev by Kenkyoo with 🩷 --- Copyright © {new Date().getFullYear()}</p>
         </aside>
       </footer>
     </>
